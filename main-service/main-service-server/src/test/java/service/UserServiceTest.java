@@ -1,6 +1,7 @@
 package service;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -27,6 +28,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
+@DisplayName("Тесты для UserService")
 class UserServiceTest {
 
     @Mock
@@ -62,6 +64,7 @@ class UserServiceTest {
     }
 
     @Test
+    @DisplayName("Создание пользователя - успешный сценарий")
     void createUser_shouldSaveAndReturnUser() {
         when(userRepository.existsByEmail(testRequest.getEmail())).thenReturn(false);
         when(userMapper.toEntity(testRequest)).thenReturn(testUser);
@@ -79,6 +82,7 @@ class UserServiceTest {
     }
 
     @Test
+    @DisplayName("Создание пользователя - ошибка при дублировании email")
     void createUser_shouldThrowConflictException_whenEmailExists() {
         when(userRepository.existsByEmail(testRequest.getEmail())).thenReturn(true);
 
@@ -88,6 +92,7 @@ class UserServiceTest {
     }
 
     @Test
+    @DisplayName("Создание пользователя - ошибка при нарушении целостности данных")
     void createUser_shouldThrowConflictException_whenDataIntegrityViolation() {
         when(userRepository.existsByEmail(testRequest.getEmail())).thenReturn(false);
         when(userMapper.toEntity(testRequest)).thenReturn(testUser);
@@ -99,6 +104,7 @@ class UserServiceTest {
     }
 
     @Test
+    @DisplayName("Получение всех пользователей - успешный сценарий")
     void getUsers_shouldReturnAllUsers_whenIdsIsNull() {
         Page<User> userPage = new PageImpl<>(List.of(testUser));
         when(userRepository.findAll(any(PageRequest.class))).thenReturn(userPage);
@@ -112,6 +118,7 @@ class UserServiceTest {
     }
 
     @Test
+    @DisplayName("Получение всех пользователей - пустой список")
     void getUsers_shouldReturnEmptyList_whenNoUsers() {
         Page<User> emptyPage = new PageImpl<>(List.of());
         when(userRepository.findAll(any(PageRequest.class))).thenReturn(emptyPage);
@@ -123,6 +130,7 @@ class UserServiceTest {
     }
 
     @Test
+    @DisplayName("Получение пользователей по списку id - успешный сценарий")
     void getUsers_shouldReturnUsersWithGivenIds() {
         Page<User> userPage = new PageImpl<>(List.of(testUser));
         when(userRepository.findByIdIn(eq(List.of(1L)), any(PageRequest.class))).thenReturn(userPage);
@@ -136,6 +144,7 @@ class UserServiceTest {
     }
 
     @Test
+    @DisplayName("Получение пользователей по списку id - пустой список при отсутствии пользователей")
     void getUsers_shouldReturnEmptyList_whenIdsNotFound() {
         Page<User> emptyPage = new PageImpl<>(List.of());
         when(userRepository.findByIdIn(eq(List.of(999L)), any(PageRequest.class))).thenReturn(emptyPage);
@@ -147,6 +156,7 @@ class UserServiceTest {
     }
 
     @Test
+    @DisplayName("Удаление пользователя - успешный сценарий")
     void deleteUser_shouldDeleteUser_whenUserExists() {
         when(userRepository.existsById(1L)).thenReturn(true);
         doNothing().when(userRepository).deleteById(1L);
@@ -158,6 +168,7 @@ class UserServiceTest {
     }
 
     @Test
+    @DisplayName("Удаление пользователя - ошибка при отсутствии пользователя")
     void deleteUser_shouldThrowNotFoundException_whenUserDoesNotExist() {
         when(userRepository.existsById(999L)).thenReturn(false);
 

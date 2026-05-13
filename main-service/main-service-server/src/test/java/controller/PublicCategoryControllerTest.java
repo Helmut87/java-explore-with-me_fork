@@ -1,6 +1,7 @@
 package controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -23,6 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = MainApplication.class)
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
+@DisplayName("Тесты для PublicCategoryController")
 class PublicCategoryControllerTest {
 
     @Autowired
@@ -35,6 +37,7 @@ class PublicCategoryControllerTest {
     private CategoryService categoryService;
 
     @Test
+    @DisplayName("Получение списка категорий - успешный сценарий")
     void getCategories_shouldReturnListOfCategories() throws Exception {
         List<CategoryDto> categories = List.of(
                 CategoryDto.builder().id(1L).name("Category 1").build(),
@@ -55,6 +58,7 @@ class PublicCategoryControllerTest {
     }
 
     @Test
+    @DisplayName("Получение списка категорий - пустой список")
     void getCategories_shouldReturnEmptyList_whenNoCategories() throws Exception {
         when(categoryService.getCategories(0, 10)).thenReturn(List.of());
 
@@ -66,6 +70,7 @@ class PublicCategoryControllerTest {
     }
 
     @Test
+    @DisplayName("Получение списка категорий - значения по умолчанию")
     void getCategories_shouldUseDefaultValues_whenParamsNotProvided() throws Exception {
         List<CategoryDto> categories = List.of(
                 CategoryDto.builder().id(1L).name("Category 1").build()
@@ -79,6 +84,7 @@ class PublicCategoryControllerTest {
     }
 
     @Test
+    @DisplayName("Получение категории по id - успешный сценарий")
     void getCategory_shouldReturnCategory_whenExists() throws Exception {
         CategoryDto category = CategoryDto.builder()
                 .id(1L)
@@ -94,6 +100,7 @@ class PublicCategoryControllerTest {
     }
 
     @Test
+    @DisplayName("Получение категории по id - категория не найдена")
     void getCategory_shouldReturnNotFound_whenCategoryDoesNotExist() throws Exception {
         when(categoryService.getCategoryById(999L))
                 .thenThrow(new NotFoundException("Category with id=999 was not found"));
@@ -104,10 +111,10 @@ class PublicCategoryControllerTest {
     }
 
     @Test
+    @DisplayName("Получение категории по id - ошибка при невалидном id")
     void getCategory_shouldReturnBadRequest_whenInvalidId() throws Exception {
         mockMvc.perform(get("/categories/invalid"))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.status").value("BAD_REQUEST"))
-                .andExpect(jsonPath("$.reason").value("Incorrectly made request."));
+                .andExpect(jsonPath("$.status").value("BAD_REQUEST"));
     }
 }

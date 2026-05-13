@@ -1,6 +1,7 @@
 package controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -23,6 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = MainApplication.class)
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
+@DisplayName("Тесты для AdminCategoryController")
 class AdminCategoryControllerTest {
 
     @Autowired
@@ -35,6 +37,7 @@ class AdminCategoryControllerTest {
     private CategoryService categoryService;
 
     @Test
+    @DisplayName("Создание категории - успешный сценарий")
     void createCategory_shouldReturnCreatedCategory() throws Exception {
         NewCategoryDto request = new NewCategoryDto();
         request.setName("Test Category");
@@ -55,6 +58,7 @@ class AdminCategoryControllerTest {
     }
 
     @Test
+    @DisplayName("Создание категории - ошибка валидации при пустом имени")
     void createCategory_shouldReturnBadRequest_whenNameIsBlank() throws Exception {
         NewCategoryDto request = new NewCategoryDto();
         request.setName("");
@@ -66,6 +70,7 @@ class AdminCategoryControllerTest {
     }
 
     @Test
+    @DisplayName("Создание категории - ошибка валидации при null имени")
     void createCategory_shouldReturnBadRequest_whenNameIsNull() throws Exception {
         NewCategoryDto request = new NewCategoryDto();
         request.setName(null);
@@ -77,6 +82,7 @@ class AdminCategoryControllerTest {
     }
 
     @Test
+    @DisplayName("Создание категории - ошибка валидации при слишком длинном имени")
     void createCategory_shouldReturnBadRequest_whenNameTooLong() throws Exception {
         NewCategoryDto request = new NewCategoryDto();
         request.setName("A".repeat(60));
@@ -88,6 +94,7 @@ class AdminCategoryControllerTest {
     }
 
     @Test
+    @DisplayName("Обновление категории - успешный сценарий")
     void updateCategory_shouldReturnUpdatedCategory() throws Exception {
         CategoryDto request = CategoryDto.builder()
                 .name("Updated Category")
@@ -109,6 +116,7 @@ class AdminCategoryControllerTest {
     }
 
     @Test
+    @DisplayName("Обновление категории - ошибка валидации при пустом имени")
     void updateCategory_shouldReturnBadRequest_whenNameIsBlank() throws Exception {
         CategoryDto request = CategoryDto.builder()
                 .name("")
@@ -121,6 +129,7 @@ class AdminCategoryControllerTest {
     }
 
     @Test
+    @DisplayName("Удаление категории - успешный сценарий")
     void deleteCategory_shouldReturnNoContent() throws Exception {
         doNothing().when(categoryService).deleteCategory(1L);
 
@@ -128,5 +137,12 @@ class AdminCategoryControllerTest {
                 .andExpect(status().isNoContent());
 
         verify(categoryService, times(1)).deleteCategory(1L);
+    }
+
+    @Test
+    @DisplayName("Удаление категории - ошибка при невалидном id")
+    void deleteCategory_shouldReturnBadRequest_whenInvalidId() throws Exception {
+        mockMvc.perform(delete("/admin/categories/invalid"))
+                .andExpect(status().isBadRequest());
     }
 }

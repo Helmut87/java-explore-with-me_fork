@@ -1,5 +1,6 @@
 package ru.practicum.exception;
 
+import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -114,6 +115,18 @@ public class ErrorHandler {
                 .message(e.getMessage())
                 .reason("Internal server error.")
                 .status("INTERNAL_SERVER_ERROR")
+                .timestamp(LocalDateTime.now())
+                .build();
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ApiError handleConstraintViolation(ConstraintViolationException e) {
+        log.error("Constraint violation: {}", e.getMessage());
+        return ApiError.builder()
+                .message(e.getMessage())
+                .reason("Incorrectly made request.")
+                .status("BAD_REQUEST")
                 .timestamp(LocalDateTime.now())
                 .build();
     }

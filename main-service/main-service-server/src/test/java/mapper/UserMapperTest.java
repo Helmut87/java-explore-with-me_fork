@@ -1,5 +1,6 @@
 package mapper;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.practicum.dto.NewUserRequest;
 import ru.practicum.dto.UserDto;
@@ -9,11 +10,13 @@ import ru.practicum.model.User;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@DisplayName("Тесты для UserMapper")
 public class UserMapperTest {
 
     private final UserMapper userMapper = new UserMapper();
 
     @Test
+    @DisplayName("Преобразование User в UserDto - успешное преобразование")
     void toDto_shouldMapUserToUserDto() {
         User user = User.builder()
                 .id(1L)
@@ -30,6 +33,7 @@ public class UserMapperTest {
     }
 
     @Test
+    @DisplayName("Преобразование User в UserShortDto - успешное преобразование")
     void toShortDto_shouldMapUserToUserShortDto() {
         User user = User.builder()
                 .id(1L)
@@ -44,6 +48,7 @@ public class UserMapperTest {
     }
 
     @Test
+    @DisplayName("Преобразование NewUserRequest в User - успешное преобразование")
     void toEntity_shouldMapNewUserRequestToUser() {
         NewUserRequest request = new NewUserRequest();
         request.setEmail("test@example.com");

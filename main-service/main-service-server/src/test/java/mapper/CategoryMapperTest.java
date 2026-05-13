@@ -1,5 +1,6 @@
 package mapper;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.practicum.dto.CategoryDto;
 import ru.practicum.dto.NewCategoryDto;
@@ -8,11 +9,13 @@ import ru.practicum.model.Category;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@DisplayName("Тесты для CategoryMapper")
 public class CategoryMapperTest {
 
     private final CategoryMapper categoryMapper = new CategoryMapper();
 
     @Test
+    @DisplayName("Преобразование Category в CategoryDto - успешное преобразование")
     void toDto_shouldMapCategoryToCategoryDto() {
         Category category = Category.builder()
                 .id(1L)
@@ -27,6 +30,7 @@ public class CategoryMapperTest {
     }
 
     @Test
+    @DisplayName("Преобразование NewCategoryDto в Category - успешное преобразование")
     void toEntity_shouldMapNewCategoryDtoToCategory() {
         NewCategoryDto dto = new NewCategoryDto();
         dto.setName("Test Category");
