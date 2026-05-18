@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class UpdateEventUserRequest {
+
     @Size(min = 20, max = 2000)
     private String annotation;
 
@@ -39,6 +40,7 @@ public class UpdateEventUserRequest {
     private String title;
 
     public enum StateAction {
-
+        SEND_TO_REVIEW,
+        CANCEL_REVIEW
     }
 }
